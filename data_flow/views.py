@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .service import push_attendance_to_sheets
 from django.http import JsonResponse
 import json
+from datetime import datetime
 from django.utils import timezone
 from users.models import SystemState
 from users.models import Teammates, AttendanceLog
@@ -16,7 +17,15 @@ from django.contrib.auth.models import User
 
 # Use this for downloading the Excel report
 def export_Attendance_Log(request):
-    selected_date = request.GET.get('date')
+    selected_date_str = request.GET.get('date')
+    if selected_date_str:
+        try:
+            selected_date = datetime.strptime(selected_date_str, '%Y-%m-%d').date()
+        except ValueError:
+            selected_date = timezone.localdate()
+    else:
+        selected_date = timezone.localdate()
+
     # Fetch data from SQLite
     logs = AttendanceLog.objects.filter(timestamp__date=selected_date)
     # Convert QuerySet to DataFrame

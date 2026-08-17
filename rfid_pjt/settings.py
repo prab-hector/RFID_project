@@ -27,10 +27,9 @@ load_dotenv(BASE_DIR / '.env')
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-o32yg%@n_sv&fx0@ou=9s^fq3n7vl@7maw14qpd-6&@s16te5e'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['nli.pythonanywhere.com', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['nli.pythonanywhere.com', '127.0.0.1', 'localhost', '*']
 
 
 # Application definition
@@ -125,24 +124,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
-
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 CRISPY_TEMPLATE_PACK = "bootstrap4"
-
-
-import os
-import environ
-from pathlib import Path
-
-# Initialize environ reader variables
-
-# 1. Base Directory Definition (Only define this once at the very top of your file)
-# BASE_DIR = Path(__file__).resolve().parent.parent
-
-# 2. Static Files (CSS, JavaScript, Images) Configuration
-STATIC_URL = '/static/'
 
 # Where Django looks for your local development assets
 STATICFILES_DIRS = [
@@ -157,6 +141,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
  
 # Redirects after login/logout
+LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/profile/'
 LOGOUT_REDIRECT_URL = '/'
 
@@ -183,3 +168,8 @@ CACHES = {
         'LOCATION': BASE_DIR / 'cache',
     }
 }
+
+AUTHENTICATION_BACKENDS = [
+    'users.backends.EmailOrUsernameModelBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]

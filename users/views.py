@@ -45,6 +45,11 @@ def home_dashboard(request):
         admin_name = "Guest Admin"
     admin_initials = "".join([n[0] for n in admin_name.split() if n])[:2].upper()
 
+    total_students = Teammates.objects.filter(is_fully_registered=True).count()
+    present_count = attendance_logs.filter(teammate__isnull=False).values('teammate').distinct().count()
+    absent_count = max(0, total_students - present_count) if total_students > 0 else 0
+    attendance_pct = f"{round((present_count / total_students) * 100)}%" if total_students > 0 else "0%"
+
     context = {
         'attendance_logs': attendance_logs,
         'selected_date': selected_date,
@@ -53,6 +58,10 @@ def home_dashboard(request):
         'admin_name': admin_name,
         'admin_initials': admin_initials,
         'user': request.user,
+        'total_students': total_students,
+        'present_count': present_count,
+        'absent_count': absent_count,
+        'attendance_pct': attendance_pct,
     }
     
     # Fixed typo: 'contex' -> 'context'
@@ -88,6 +97,7 @@ def logout(request):
     django_logout(request)  # This terminates the active session
     return redirect('homepg')  # This bounces them directly back to the dashboard
 
+@login_required
 def profile(request):
      user_storage_records = Teammates.objects.filter(author = request.user)
 

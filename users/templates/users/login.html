@@ -150,37 +150,53 @@
     <div class="login-left">
       <span class="page-label">LOGIN PAGE</span>
 
-      <img src="assets/NLL_LOGO.png" alt="NLL Logo" class="login-logo" />
+      <div class="login-logo" style="display:flex;align-items:center;justify-content:center;background:#001F4D;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+      </div>
 
       <h1 class="login-heading">Welcome Back</h1>
       <p class="login-sub">Sign in to access your attendance dashboard</p>
 
-      <form class="login-form" id="login-form" method="POST" action="">
-        <!-- {% csrf_token %} (Django CSRF Token) -->
+      <form class="login-form" id="login-form" method="POST" action="{% url 'login' %}">
+        {% csrf_token %}
+
+        {% if form.errors %}
+          <div style="color: #dc2626; font-size: 13px; font-weight: 500; padding: 10px 14px; background-color: #fee2e2; border: 1px solid #fca5a5; border-radius: 6px; margin-bottom: 8px;">
+            {% if form.non_field_errors %}
+              {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            {% else %}
+              <p>Invalid username or password. Please try again.</p>
+            {% endif %}
+          </div>
+        {% endif %}
 
         <div class="form-group">
           <label class="form-label" for="username">Username / Email</label>
-          <input class="form-input" type="email" id="username" name="username" placeholder="abc.def@somaiya.edu" autocomplete="email" />
-          <span class="form-error" id="email-error">Please enter a valid email address.</span>
+          <input class="form-input" type="text" id="username" name="username" placeholder="Username or email" autocomplete="username" required />
+          <span class="form-error" id="email-error">Please enter your username or email address.</span>
         </div>
 
         <div class="form-group">
           <label class="form-label" for="password">Password</label>
           <div class="input-wrap">
-            <input class="form-input" type="password" id="password" name="password" placeholder="••••••••••" autocomplete="current-password" />
+            <input class="form-input" type="password" id="password" name="password" placeholder="••••••••••" autocomplete="current-password" required />
             <button type="button" class="toggle-pwd" id="toggle-pwd" title="Show / hide password">
               <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
           </div>
-          <span class="form-error" id="pass-error">Password must be at least 6 characters.</span>
+          <span class="form-error" id="pass-error">Please enter your password.</span>
         </div>
 
         <div class="footer-row">
           <label class="checkbox-wrap">
-            <input type="checkbox" id="remember-me" />
+            <input type="checkbox" id="remember-me" name="remember-me" />
             <span>Remember me on this device</span>
           </label>
-           <a href="{% url 'reset_password' %}" class="text-sm font-medium text-blue-400 hover:text-blue-300">Forgot Password</a>
+           <a href="{% url 'reset_password' %}" class="forgot-link">Forgot Password?</a>
         </div>
 
         <button type="submit" class="btn-signin" id="sign-in-btn">SIGN IN</button>
@@ -190,7 +206,11 @@
 
     <!-- RIGHT -->
     <div class="login-right">
-      <img src="assets/NLL_LOGO.png" alt="NLL Logo" class="right-logo" />
+      <div class="right-logo" style="display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.15);">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+      </div>
       <h2 class="right-heading">Hello User 👋</h2>
       <p class="right-desc">Your presence matters. We track it seamlessly so you can focus on what's important — learning.</p>
       <ul class="bullets">
@@ -203,7 +223,47 @@
 
   </div>
 
+  <!-- MOUSE SPOTLIGHT LIGHT EFFECT -->
+  <div class="cursor-spotlight" id="cursor-spotlight"></div>
+  <div class="cursor-dot" id="cursor-dot"></div>
+
+  <style>
+    .cursor-spotlight {
+      position: fixed; top: 0; left: 0; width: 600px; height: 600px; border-radius: 50%;
+      pointer-events: none; background: radial-gradient(circle, rgba(0, 191, 255, 0.12) 0%, rgba(37, 99, 235, 0.04) 45%, transparent 70%);
+      transform: translate(-50%, -50%); z-index: 9998; opacity: 0; transition: opacity 0.3s ease; will-change: transform;
+    }
+    .cursor-dot {
+      position: fixed; top: 0; left: 0; width: 8px; height: 8px; border-radius: 50%;
+      pointer-events: none; background: #00BFFF; box-shadow: 0 0 12px #00BFFF, 0 0 20px #2563EB;
+      transform: translate(-50%, -50%); z-index: 9999; opacity: 0; transition: opacity 0.2s ease;
+    }
+    body:hover .cursor-spotlight, body:hover .cursor-dot { opacity: 1; }
+  </style>
+
   <script>
+    // ── MOUSE SPOTLIGHT FOLLOWER ──────────────────────────
+    const spotlight = document.getElementById('cursor-spotlight');
+    const dot = document.getElementById('cursor-dot');
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let currentX = mouseX;
+    let currentY = mouseY;
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (dot) dot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+    });
+
+    function animateSpotlight() {
+      currentX += (mouseX - currentX) * 0.15;
+      currentY += (mouseY - currentY) * 0.15;
+      if (spotlight) spotlight.style.transform = `translate(${currentX - 300}px, ${currentY - 300}px)`;
+      requestAnimationFrame(animateSpotlight);
+    }
+    animateSpotlight();
+
     // ── SHOW / HIDE PASSWORD ──────────────────────────────
     const toggleBtn = document.getElementById('toggle-pwd');
     const passInput = document.getElementById('password');
@@ -219,26 +279,23 @@
 
     // ── FORM VALIDATION ───────────────────────────────────
     document.getElementById('login-form').addEventListener('submit', (e) => {
-      e.preventDefault();
       let valid = true;
-      const email    = document.getElementById('username');
-      const password = document.getElementById('password');
+      const usernameInput = document.getElementById('username');
+      const passwordInput = document.getElementById('password');
       const emailErr = document.getElementById('email-error');
       const passErr  = document.getElementById('pass-error');
 
-      email.classList.remove('error'); emailErr.classList.remove('show');
-      password.classList.remove('error'); passErr.classList.remove('show');
+      usernameInput.classList.remove('error'); emailErr.classList.remove('show');
+      passwordInput.classList.remove('error'); passErr.classList.remove('show');
 
-      if (!email.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
-        email.classList.add('error'); emailErr.classList.add('show'); valid = false;
+      if (!usernameInput.value.trim()) {
+        usernameInput.classList.add('error'); emailErr.classList.add('show'); valid = false;
       }
-      if (!password.value || password.value.length < 6) {
-        password.classList.add('error'); passErr.classList.add('show'); valid = false;
+      if (!passwordInput.value) {
+        passwordInput.classList.add('error'); passErr.classList.add('show'); valid = false;
       }
-      if (valid) {
-        const btn = document.getElementById('sign-in-btn');
-        btn.textContent = 'Signing in...'; btn.disabled = true;
-        setTimeout(() => { window.location.href = 'dashboard.html'; }, 900);
+      if (!valid) {
+        e.preventDefault();
       }
     });
   </script>

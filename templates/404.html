@@ -1,0 +1,240 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="NLL RFID Attendance System – Page not found. Navigate back to the dashboard." />
+  <title>404 Not Found — NLL RFID Attendance System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #F5F7FA; -webkit-font-smoothing: antialiased; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+
+    /* ── SHELL ── */
+    .app-shell { display: flex; min-height: 100vh; }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 140px; background: #001F4D;
+      display: flex; flex-direction: column; align-items: center;
+      padding: 24px 0 16px;
+      position: fixed; top: 0; left: 0; height: 100vh;
+      z-index: 100; box-shadow: 4px 0 16px rgba(0,0,0,0.2);
+      opacity: 0.85; transition: left 0.3s;
+    }
+    .sidebar-logo { display: flex; flex-direction: column; align-items: center; margin-bottom: 32px; gap: 8px; }
+    .sidebar-logo .logo-box { width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #0c2b64; border: 2px solid #00BFFF; }
+    .logo-txt { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.75); letter-spacing: 0.1em; text-transform: uppercase; }
+    .sidebar-nav { flex: 1; width: 100%; display: flex; flex-direction: column; gap: 4px; }
+    .nav-item {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 10px 4px; color: rgba(255,255,255,0.7); font-size: 11px; font-weight: 500;
+      gap: 5px; border-left: 3px solid transparent; letter-spacing: 0.04em; text-transform: uppercase;
+      transition: background 0.15s, color 0.15s;
+    }
+    .nav-item:hover { color: #fff; background: rgba(255,255,255,0.06); }
+    .nav-item svg { width: 22px; height: 22px; }
+    .sidebar-bottom { width: 100%; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: auto; }
+    .nav-item.logout { color: rgba(255,100,100,0.8); }
+    .nav-item.logout:hover { color: #ff6b6b; background: rgba(255,0,0,0.1); }
+
+    .hamburger {
+      display: none; position: fixed; top: 14px; left: 14px; z-index: 200;
+      background: #001F4D; border: none; color: #fff; padding: 8px; border-radius: 6px; cursor: pointer;
+    }
+    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99; }
+
+    /* ── MAIN ── */
+    .main-area { margin-left: 140px; flex: 1; display: flex; flex-direction: column; }
+
+    /* ── HEADER (OFFLINE) ── */
+    .header {
+      height: 64px; background: #111827;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px; position: sticky; top: 0; z-index: 50;
+      border-bottom: 2px solid #FF0000;
+      box-shadow: 0 2px 12px rgba(255,0,0,0.15);
+    }
+    .header-left { display: flex; align-items: center; gap: 14px; }
+    .header-logo-box { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #1f2937; border: 2px solid #FF0000; }
+    .header-title { font-size: 15px; font-weight: 700; color: #fff; }
+    .header-right { display: flex; align-items: center; gap: 14px; }
+    .status-pill {
+      display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600;
+      padding: 4px 12px; border-radius: 999px;
+      border: 1px solid rgba(255,0,0,0.4); color: #FF0000; background: rgba(255,0,0,0.08);
+    }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #FF0000; }
+    .user-pill {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 999px; padding: 4px 14px 4px 6px; color: #fff; font-size: 12px; font-weight: 600;
+    }
+    .user-avatar { width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#0B0834,#1A1C99); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#fff; }
+
+    /* ── 404 CENTER ── */
+    .error-center {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 48px 24px;
+    }
+
+    /* ANIMATED PLUG ICON */
+    .plug-wrap { margin-bottom: 28px; animation: float 3s ease-in-out infinite; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+
+    /* 404 TEXT */
+    .error-code {
+      font-size: 120px; font-weight: 800; line-height: 1;
+      background: linear-gradient(180deg, #0B0834 0%, #1A1C99 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; letter-spacing: -0.04em;
+      margin-bottom: 12px;
+    }
+    .error-title { font-size: 36px; font-weight: 800; color: #000000; margin-bottom: 10px; }
+    .error-desc  { font-size: 14px; color: #6B7280; max-width: 420px; line-height: 1.7; margin-bottom: 28px; }
+
+    .btn-back {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 36px; border-radius: 6px;
+      background: linear-gradient(135deg, #0B0834, #1A1C99);
+      color: #fff; font-size: 14px; font-weight: 700; font-family: 'Inter',sans-serif;
+      border: none; cursor: pointer; transition: all 0.2s;
+      box-shadow: 0 4px 16px rgba(26,28,153,0.3);
+    }
+    .btn-back:hover { box-shadow: 0 6px 22px rgba(26,28,153,0.45); transform: translateY(-2px); }
+    .btn-back:active { transform: scale(0.98); }
+
+    /* RESPONSIVE */
+    @media (max-width:1024px) {
+      .sidebar { width:64px; } .main-area { margin-left:64px; }
+      .logo-txt, .nav-item span { display:none; } .sidebar-logo .logo-box { width:42px; height:42px; }
+    }
+    @media (max-width:768px) {
+      .sidebar { left:-200px; width:200px; } .main-area { margin-left:0; }
+      .hamburger { display:flex; }
+      .header { padding:0 16px 0 56px; } .header-title { font-size:13px; }
+      .error-code { font-size:80px; }
+    }
+  </style>
+</head>
+<body>
+
+  <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+  <div class="overlay" id="overlay"></div>
+
+  <div class="app-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-box">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00BFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+            <polyline points="2 17 12 22 22 17"/>
+            <polyline points="2 12 12 17 22 12"/>
+          </svg>
+        </div>
+        <span class="logo-txt">NLL RFID</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="{% url 'homepg' %}" class="nav-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="{% url 'profile' %}" class="nav-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Profile Page</span>
+        </a>
+      </nav>
+      <div class="sidebar-bottom">
+        <a href="{% url 'login' %}" class="nav-item logout">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span>PORTAL</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main-area">
+
+      <!-- HEADER — OFFLINE STATE -->
+      <header class="header">
+        <div class="header-left">
+          <div class="header-logo-box">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF0000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+              <polyline points="2 17 12 22 22 17"/>
+              <polyline points="2 12 12 17 22 12"/>
+            </svg>
+          </div>
+          <span class="header-title">NLL RFID Attendance System</span>
+        </div>
+        <div class="header-right">
+          <div class="status-pill">
+            <span class="status-dot"></span>
+            <span>Gateway offline</span>
+          </div>
+          <div class="user-pill">
+            <div class="user-avatar">GA</div>
+            <span>GUEST ADMIN</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- ERROR CONTENT -->
+      <main class="error-center">
+
+        <!-- Floating Plug / Disconnected Icon -->
+        <div class="plug-wrap">
+          <svg xmlns="http://www.w3.org/2000/svg" width="110" height="110" viewBox="0 0 24 24" fill="none" stroke="#001F4D" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18.36 6.64a9 9 0 1 1-12.73 0"/>
+            <line x1="12" y1="2" x2="12" y2="12"/>
+            <line x1="9" y1="5" x2="9" y2="8" stroke="#00BFFF" stroke-width="2.5"/>
+            <line x1="15" y1="5" x2="15" y2="8" stroke="#00BFFF" stroke-width="2.5"/>
+          </svg>
+        </div>
+
+        <div class="error-code">404</div>
+
+        <h1 class="error-title">Page Not Found</h1>
+
+        <p class="error-desc">
+          The page you're looking for doesn't exist or has been moved. It may have been deleted or the URL might be incorrect.
+        </p>
+
+        <a href="{% url 'homepg' %}" class="btn-back">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Go Back to Dashboard
+        </a>
+
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    if (hamburger && sidebar && overlay) {
+      hamburger.addEventListener('click', () => {
+        const isOpen = sidebar.style.left === '0px';
+        sidebar.style.left = isOpen ? '-200px' : '0px';
+        overlay.style.display = isOpen ? 'none' : 'block';
+      });
+      overlay.addEventListener('click', () => {
+        sidebar.style.left = '-200px';
+        overlay.style.display = 'none';
+      });
+    }
+  </script>
+
+</body>
+</html>

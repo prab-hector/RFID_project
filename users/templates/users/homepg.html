@@ -2,344 +2,710 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Attendance Page</title>
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-        body {
-            margin: 0;
-            min-height: 100vh;
-            background: #05070d;
-            color: #ffffff;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        .dashboard-container {
-            width: min(1180px, calc(100% - 40px));
-            margin: 0 auto;
-            padding: 24px 0 40px;
-            position: relative;
-            z-index: 1;
-        }
-        .navbar-header-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 24px;
-            gap: 20px;
-        }
-        .app-logo-block {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: bold;
-            font-size: 18px;
-            min-width: 200px;
-        }
-        .logo-icon {
-            background-color: #2563eb;
-            padding: 8px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="NLL RFID Attendance System – Next-Gen Real-Time Student Attendance Intelligence Dashboard." />
+  <title>Dashboard — NLL RFID Attendance System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 
-        /* CENTERED COSMOS BANNER FRAME */
-        .navbar-cosmos-banner {
-            flex: 1;
-            height: 50px;
-            overflow: hidden;
-            border-radius: 6px;
-            border: 1px solid #1f242e;
-        }
-        .navbar-cosmos-banner img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* PROFILE BUTTON AND DROPDOWN ARRANGEMENT */
-        .user-login-profile-badge {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            min-width: 280px;
-            justify-content: flex-end;
-        }
-        .status-dot-indicator {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background-color: #0c1917;
-            border: 1px solid #10b981;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            color: #10b981;
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-        .profile-trigger-btn {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: none;
-            border: none;
-            color: #ffffff;
-            cursor: pointer;
-            padding: 4px;
-            text-decoration: none; 
-        }
-        .avatar-circle {
-            width: 36px;
-            height: 36px;
-            background-color: #2563eb;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 14px;
-            color: #ffffff;
-        }
-        .profile-meta-text {
-            text-align: left;
-            font-size: 13px;
-        }
-        .profile-meta-text .user-name {
-            font-weight: 600;
-            display: block;
-        }
-        .profile-meta-text .user-role {
-            font-size: 10px;
-            color: #6b7280;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+    :root {
+      --primary-navy: #001F4D;
+      --primary-dark: #070D1E;
+      --accent-cyan: #00BFFF;
+      --accent-blue: #2563EB;
+      --accent-indigo: #4F46E5;
+      --success-green: #10B981;
+      --bg-slate: #F4F7FC;
+      --card-bg: #FFFFFF;
+      --border-color: #E2E8F0;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+    }
 
-        /* CONTROLS ROW INTERFACE CONFIGURATION */
-        .controls-row {
-            display: flex;
-            gap: 16px;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-        .search-filter-wrapper {
-            flex: 1;
-        }
-        .search-filter-wrapper input {
-            width: 100%;
-            background-color: #0f1115;
-            border: 1px solid #1f242e;
-            border-radius: 8px;
-            padding: 14px 16px;
-            color: #ffffff;
-            font-size: 14px;
-            outline: none;
-            box-sizing: border-box;
-        }
-        
-        /* NATIVE CALENDAR COMPONENT */
-        .date-picker-wrapper {
-            position: relative;
-            width: 240px;
-        }
-        .date-picker-wrapper input[type="date"] {
-            width: 100%;
-            background-color: #0f1115;
-            border: 1px solid #1f242e;
-            border-radius: 8px;
-            padding: 13px 16px;
-            color: #ffffff;
-            font-size: 14px;
-            outline: none;
-            box-sizing: border-box;
-            font-family: inherit;
-        }
-        .date-picker-wrapper input[type="date"]::-webkit-calendar-picker-indicator {
-            filter: invert(1);
-            cursor: pointer;
-        }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg-slate);
+      color: var(--text-main);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      position: relative;
+    }
 
-        /* DATA MONITOR FRAME BUFFER */
-        .status-container {
-            background-color: #090a0f;
-            border: 1px solid #141722;
-            border-radius: 12px;
-            padding: 100px 20px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        .status-icon {
-            margin-bottom: 16px;
-            color: #3b82f6;
-        }
-        .status-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #ffffff;
-        }
-        .status-subtitle {
-            font-size: 14px;
-            color: #6b7280;
-            max-width: 440px;
-            line-height: 1.5;
-        }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
 
-        /* Ambient star background layer styles */
-        .star {
-            position: absolute;
-            background-color: white;
-            border-radius: 50%;
-            animation: pulse 3.5s infinite ease-in-out;
-            pointer-events: none;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 0.15; transform: scale(0.8); }
-            50% { opacity: 0.8; transform: scale(1.2); }
-        }
-    </style>
+    /* ── CURSOR SPOTLIGHT LIGHT EFFECT ── */
+    .cursor-spotlight {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      pointer-events: none;
+      background: radial-gradient(circle, rgba(0, 191, 255, 0.12) 0%, rgba(37, 99, 235, 0.05) 45%, transparent 70%);
+      transform: translate(-50%, -50%);
+      z-index: 9998;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      will-change: transform;
+    }
+    .cursor-dot {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      pointer-events: none;
+      background: #00BFFF;
+      box-shadow: 0 0 12px #00BFFF, 0 0 20px #2563EB;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+      opacity: 0;
+      transition: opacity 0.2s ease, transform 0.05s ease-out;
+    }
+    body:hover .cursor-spotlight,
+    body:hover .cursor-dot { opacity: 1; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scanBeam {
+      0% { left: -80px; opacity: 0; }
+      50% { opacity: 1; }
+      100% { left: 105%; opacity: 0; }
+    }
+    @keyframes beaconPulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+    @keyframes rfidWave {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(0, 31, 77, 0.25); }
+      50% { box-shadow: 0 0 0 10px rgba(0, 31, 77, 0); }
+    }
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 0.85; }
+    }
+    @keyframes rowSlideIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .app-shell { display: flex; min-height: 100vh; position: relative; z-index: 2; }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 130px;
+      background: linear-gradient(180deg, #00173B 0%, #001F4D 50%, #00122E 100%);
+      display: flex; flex-direction: column; align-items: center;
+      padding: 24px 0 16px;
+      position: fixed; top: 0; left: 0; height: 100vh;
+      z-index: 100;
+      box-shadow: 6px 0 24px rgba(0, 31, 77, 0.18);
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .sidebar-logo { display: flex; flex-direction: column; align-items: center; margin-bottom: 28px; gap: 8px; }
+    .logo-box {
+      width: 52px; height: 52px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, rgba(0, 191, 255, 0.15), rgba(37, 99, 235, 0.3));
+      border: 1.5px solid rgba(0, 191, 255, 0.5);
+      box-shadow: 0 0 18px rgba(0, 191, 255, 0.3);
+      transition: transform 0.3s ease;
+    }
+    .logo-box:hover { transform: scale(1.08) rotate(3deg); }
+    .logo-txt { font-size: 11px; font-weight: 800; color: #00BFFF; letter-spacing: 0.12em; text-transform: uppercase; }
+
+    .sidebar-nav { flex: 1; width: 100%; display: flex; flex-direction: column; gap: 6px; padding: 0 8px; }
+    .nav-item {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 12px 6px; color: rgba(255,255,255,0.6); font-size: 11px; font-weight: 600;
+      border-radius: 12px; cursor: pointer; transition: all 0.25s ease; gap: 6px;
+      letter-spacing: 0.03em;
+    }
+    .nav-item svg { width: 22px; height: 22px; transition: transform 0.2s ease; }
+    .nav-item:hover {
+      color: #FFFFFF;
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+    .nav-item:hover svg { transform: scale(1.15); }
+    .nav-item.active {
+      color: #FFFFFF;
+      background: linear-gradient(135deg, rgba(0, 191, 255, 0.25), rgba(37, 99, 235, 0.35));
+      border: 1px solid rgba(0, 191, 255, 0.4);
+      font-weight: 700;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    }
+    .sidebar-bottom { width: 100%; padding: 14px 8px 0; border-top: 1px solid rgba(255,255,255,0.08); margin-top: auto; }
+    .nav-item.logout { color: rgba(255, 110, 110, 0.85); }
+    .nav-item.logout:hover {
+      color: #FF5252; background: rgba(255, 82, 82, 0.15); border: 1px solid rgba(255, 82, 82, 0.3);
+    }
+
+    .hamburger {
+      display: none; position: fixed; top: 14px; left: 14px; z-index: 200;
+      background: var(--primary-navy); border: 1px solid rgba(255,255,255,0.2);
+      color: #fff; padding: 8px; border-radius: 8px; cursor: pointer;
+    }
+    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 99; }
+
+    /* ── MAIN AREA ── */
+    .main-area { margin-left: 130px; flex: 1; display: flex; flex-direction: column; min-width: 0; }
+
+    /* ── HEADER ── */
+    .header {
+      height: 68px; background: rgba(17, 24, 39, 0.95);
+      backdrop-filter: blur(12px);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 28px; position: fixed; top: 0; left: 130px; right: 0; z-index: 50;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+    .header-left { display: flex; align-items: center; gap: 14px; }
+    .header-logo-box {
+      width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      background: rgba(0, 191, 255, 0.1); border: 1.5px solid rgba(0, 191, 255, 0.3);
+    }
+    .header-title { font-size: 15px; font-weight: 700; color: #fff; letter-spacing: 0.02em; }
+    .header-right { display: flex; align-items: center; gap: 14px; }
+    .status-pill {
+      display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600;
+      padding: 6px 14px; border-radius: 999px; border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #10B981; background: rgba(16, 185, 129, 0.1);
+    }
+    .status-dot {
+      width: 8px; height: 8px; border-radius: 50%; background: #10B981;
+      animation: beaconPulse 2s infinite;
+    }
+    .user-pill {
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 999px; padding: 4px 14px 4px 5px; color: #fff; font-size: 12px; font-weight: 600;
+      transition: all 0.2s;
+    }
+    .user-pill:hover { background: rgba(255,255,255,0.12); transform: translateY(-1px); }
+    .user-avatar-sm {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: linear-gradient(135deg, #00BFFF, #2563EB);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 800; color: #fff;
+    }
+
+    /* ── CONTENT ── */
+    .content {
+      padding: 32px 36px;
+      flex: 1;
+      margin-top: 68px;
+      animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    /* ── CONTROLS ROW ── */
+    .controls-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 20px; flex-wrap: wrap; gap: 14px;
+    }
+    .section-label {
+      font-size: 28px; font-weight: 800; color: var(--primary-navy);
+      letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px;
+    }
+    .section-label::before {
+      content: ''; display: inline-block; width: 6px; height: 26px;
+      background: linear-gradient(180deg, #00BFFF, #2563EB); border-radius: 4px;
+    }
+
+    .date-filter-group { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .date-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #FFFFFF; border: 1.5px solid var(--border-color); border-radius: 8px;
+      padding: 8px 14px; font-size: 13px; font-weight: 700; color: var(--primary-navy);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    }
+    .date-picker-input {
+      background: #FFFFFF; border: 1.5px solid var(--border-color); border-radius: 8px;
+      padding: 7px 12px; font-size: 13px; font-weight: 600; color: var(--primary-navy);
+      outline: none; font-family: inherit; transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .date-picker-input:focus { border-color: #001F4D; box-shadow: 0 0 0 3px rgba(0,31,77,0.1); }
+    
+    .btn-export {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: linear-gradient(135deg, #001F4D, #1A1C99); color: #fff;
+      border: none; border-radius: 8px; padding: 8px 16px;
+      font-size: 12.5px; font-weight: 700; cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 31, 77, 0.2);
+      transition: all 0.25s ease;
+    }
+    .btn-export:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(0, 31, 77, 0.3);
+      background: linear-gradient(135deg, #002D6E, #2563EB);
+    }
+
+    /* ── ACTION BANNER (INCOMPLETE PROFILES) ── */
+    .incomplete-banner {
+      background: #FFFBEB; border: 1.5px solid #F59E0B; border-radius: 12px;
+      padding: 16px 20px; margin-bottom: 20px; color: #92400E;
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.12);
+      animation: fadeInUp 0.4s ease;
+    }
+    .incomplete-header { font-size: 14px; font-weight: 800; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .incomplete-item {
+      display: flex; justify-content: space-between; align-items: center;
+      background: #FFFFFF; border: 1px solid #FDE68A; border-radius: 8px;
+      padding: 10px 16px; margin-top: 8px; font-size: 13px;
+    }
+    .btn-complete-profile {
+      background: #D97706; color: #fff; padding: 6px 14px; border-radius: 6px;
+      font-size: 12px; font-weight: 700; text-decoration: none; transition: background 0.15s;
+    }
+    .btn-complete-profile:hover { background: #B45309; }
+
+    /* ── HERO BANNER ── */
+    .welcome-banner {
+      background: linear-gradient(135deg, #070D1E 0%, #001F4D 45%, #1A1C99 100%);
+      border-radius: 16px; padding: 28px 36px; margin-bottom: 22px;
+      position: relative; overflow: hidden;
+      box-shadow: 0 10px 30px -5px rgba(0, 31, 77, 0.35);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .welcome-banner::before {
+      content: ''; position: absolute; width: 340px; height: 340px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,191,255,0.2) 0%, transparent 70%);
+      right: -60px; top: -100px; animation: glowPulse 4s infinite ease-in-out;
+    }
+    .banner-heading { font-size: 24px; font-weight: 800; color: #fff; letter-spacing: -0.01em; margin-bottom: 6px; position: relative; z-index: 1; }
+    .banner-sub { font-size: 13px; color: rgba(255,255,255,0.75); letter-spacing: 0.04em; position: relative; z-index: 1; }
+
+    /* ── READER STATUS BAR (ANIMATED SCANNER) ── */
+    .reader-bar {
+      background: #FFFFFF; border: 1.5px solid var(--border-color); border-radius: 14px;
+      padding: 16px 22px; margin-bottom: 22px; position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.04); flex-wrap: wrap; gap: 12px;
+    }
+    .reader-bar::after {
+      content: ''; position: absolute; top: 0; bottom: 0; width: 80px;
+      background: linear-gradient(90deg, transparent, rgba(0, 191, 255, 0.25), transparent);
+      animation: scanBeam 3.5s ease-in-out infinite; pointer-events: none;
+    }
+    .reader-status { display: flex; align-items: center; gap: 14px; }
+    .reader-icon-wrap {
+      width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+      background: rgba(0, 31, 77, 0.07); border: 1.5px solid rgba(0, 31, 77, 0.15);
+      display: flex; align-items: center; justify-content: center;
+      animation: rfidWave 2.5s ease-in-out infinite;
+    }
+    .reader-label { font-size: 14px; font-weight: 800; color: var(--primary-navy); }
+    .reader-hint  { font-size: 12px; color: var(--text-muted); }
+
+    /* ── STATS COUNTER GRID (INTERACTIVE 3D LIFT) ── */
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-bottom: 24px;
+    }
+    .stat-card {
+      background: #FFFFFF; border: 1.5px solid var(--border-color); border-radius: 14px;
+      padding: 22px 18px; display: flex; flex-direction: column; align-items: center; text-align: center;
+      box-shadow: 0 4px 14px rgba(0, 31, 77, 0.04);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative; overflow: hidden;
+    }
+    .stat-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+      background: linear-gradient(90deg, #001F4D, #00BFFF);
+    }
+    .stat-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      border-color: #001F4D;
+      box-shadow: 0 16px 30px -6px rgba(0, 31, 77, 0.14);
+    }
+    .stat-icon-wrap {
+      width: 42px; height: 42px; border-radius: 50%; background: rgba(0, 31, 77, 0.06);
+      display: flex; align-items: center; justify-content: center; margin-bottom: 10px;
+      transition: transform 0.3s ease;
+    }
+    .stat-card:hover .stat-icon-wrap { transform: scale(1.15) rotate(6deg); }
+    .stat-num {
+      font-size: 34px; font-weight: 800; color: var(--primary-navy); line-height: 1; margin-bottom: 5px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .stat-label { font-size: 11px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; }
+
+    /* ── ATTENDANCE LOG TABLE CARD ── */
+    .card {
+      background: #FFFFFF; border: 1.5px solid var(--border-color); border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 31, 77, 0.05); overflow: hidden;
+    }
+    .card-header {
+      padding: 18px 24px; border-bottom: 1.5px solid var(--border-color);
+      display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+      font-size: 16px; font-weight: 800; color: var(--primary-navy);
+    }
+    .tap-count-badge {
+      font-size: 11px; font-weight: 700; color: #059669; margin-left: 8px;
+      background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 999px; padding: 4px 12px;
+    }
+    .search-wrap { position: relative; }
+    .search-wrap svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94A3B8; pointer-events: none; }
+    .search-input {
+      padding: 9px 14px 9px 38px; border: 1.5px solid var(--border-color); border-radius: 8px;
+      font-size: 13px; font-family: inherit; outline: none; transition: all 0.2s ease; width: 240px;
+    }
+    .search-input:focus {
+      border-color: #001F4D; box-shadow: 0 0 0 3px rgba(0, 31, 77, 0.1); width: 280px;
+    }
+
+    /* TABLE STYLING */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead { background: var(--primary-navy); color: #fff; }
+    thead th {
+      padding: 13px 18px; text-align: left; font-size: 11px; font-weight: 800;
+      letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap;
+    }
+    tbody tr {
+      border-bottom: 1px solid #F1F5F9; transition: all 0.2s ease;
+      animation: rowSlideIn 0.3s ease both;
+    }
+    tbody tr:hover {
+      background: #F8FAFF; transform: translateX(3px);
+      box-shadow: inset 4px 0 0 #00BFFF;
+    }
+    tbody td { padding: 13px 18px; color: #1E293B; vertical-align: middle; white-space: nowrap; }
+
+    .av {
+      width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 800; color: #fff; flex-shrink: 0;
+      background: linear-gradient(135deg, #001F4D, #1A1C99);
+      box-shadow: 0 2px 6px rgba(0, 31, 77, 0.2);
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: 4px; padding: 4px 12px;
+      border-radius: 999px; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    .bg-green {
+      background: rgba(16, 185, 129, 0.12); color: #059669; border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+
+    /* EMPTY STATE */
+    .empty-state {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 60px 20px; color: #94A3B8; text-align: center;
+    }
+    .empty-state svg { margin-bottom: 14px; opacity: 0.35; }
+    .empty-state h3 { font-size: 16px; font-weight: 800; color: #1E293B; margin-bottom: 6px; }
+
+    /* RESPONSIVE */
+    @media (max-width:1024px) {
+      .sidebar { width: 64px; } .main-area { margin-left: 64px; } .header { left: 64px; }
+      .logo-txt, .nav-item span { display: none; } .logo-box { width: 40px; height: 40px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width:768px) {
+      .sidebar { left: -200px; width: 200px; } .sidebar.open { left: 0; } .overlay.open { display: block; }
+      .hamburger { display: flex; } .main-area { margin-left: 0; } .header { left: 0; padding: 0 16px 0 56px; }
+      .logo-txt, .nav-item span { display: block; }
+      .content { padding: 20px 16px; }
+      .banner-heading { font-size: 20px; }
+      .search-input { width: 100%; }
+      .search-input:focus { width: 100%; }
+    }
+    @media (max-width:480px) {
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .status-pill span:last-child { display: none; }
+    }
+  </style>
 </head>
 <body>
 
-    <div class="dashboard-container">
+  <!-- MOUSE SPOTLIGHT LIGHT EFFECT -->
+  <div class="cursor-spotlight" id="cursor-spotlight"></div>
+  <div class="cursor-dot" id="cursor-dot"></div>
 
-        <header class="navbar-header-row">
-            <div class="app-logo-block">
-                <div class="logo-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <polygon points="12 2 2 7 12 12 22 7 12 2"/>
-                        <polyline points="2 17 12 22 22 17"/>
-                        <polyline points="2 12 12 17 22 12"/>
-                    </svg>
-                </div>
-                <span>Attendance Page</span>
+  <!-- MOBILE HAMBURGER -->
+  <button class="hamburger" id="hamburger" aria-label="Toggle navigation">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+  <div class="overlay" id="overlay"></div>
+
+  <div class="app-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-box">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#00BFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+            <polyline points="2 17 12 22 22 17"/>
+            <polyline points="2 12 12 17 22 12"/>
+          </svg>
+        </div>
+        <span class="logo-txt">NLL RFID</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="{% url 'homepg' %}" class="nav-item active">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="{% url 'profile' %}" class="nav-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Profile</span>
+        </a>
+      </nav>
+      <div class="sidebar-bottom">
+        {% if user.is_authenticated %}
+        <form action="{% url 'logout' %}" method="post" style="width:100%;margin:0;">
+          {% csrf_token %}
+          <button type="submit" class="nav-item logout" style="width:100%;background:none;border:none;cursor:pointer;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            <span>Log Out</span>
+          </button>
+        </form>
+        {% else %}
+        <a href="{% url 'login' %}" class="nav-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          <span>Log In</span>
+        </a>
+        {% endif %}
+      </div>
+    </aside>
+
+    <!-- MAIN AREA -->
+    <div class="main-area">
+      <header class="header">
+        <div class="header-left">
+          <div class="header-logo-box">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00BFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+              <polyline points="2 17 12 22 22 17"/>
+              <polyline points="2 12 12 17 22 12"/>
+            </svg>
+          </div>
+          <span class="header-title">NLL RFID Attendance System</span>
+        </div>
+        <div class="header-right">
+          <div class="status-pill"><span class="status-dot"></span><span>Gateway Online</span></div>
+          {% if user.is_authenticated %}
+          <a href="{% url 'profile' %}" class="user-pill">
+            <div class="user-avatar-sm">{{ admin_initials|default:"U" }}</div>
+            <span>{{ admin_name }}</span>
+          </a>
+          {% else %}
+          <a href="{% url 'login' %}" class="user-pill">
+            <div class="user-avatar-sm">{{ admin_initials|default:"GA" }}</div>
+            <span>{{ admin_name }}</span>
+          </a>
+          {% endif %}
+        </div>
+      </header>
+
+      <main class="content">
+        <!-- CONTROLS & DATE BAR -->
+        <div class="controls-bar">
+          <h1 class="section-label">Attendance Dashboard</h1>
+
+          <div class="date-filter-group">
+            <div class="date-badge">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <span>{{ selected_date|date:"l, F d, Y" }}</span>
             </div>
 
-            <div class="navbar-cosmos-banner">
-                <img src="{% static 'images/cosmos.jpg' %}" alt="Cosmos">
-            </div>
-
-            <div class="user-login-profile-badge">
-                <div class="status-dot-indicator">
-                    <span style="width: 8px; height: 8px; background-color: #10b981; border-radius: 50%; display: inline-block; margin-right: 2px;"></span>
-                    Gateway Online
-                </div>
-                
-                <a href="{% url 'login' %}" class="profile-trigger-btn">
-                    <div class="avatar-circle">{{ admin_initials }}</div>
-                    <div class="profile-meta-text">
-                        <span class="user-name">{{ admin_name }}</span>
-                        <span class="user-role">root user</span>
-                    </div>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 4px;">
-                        <path d="M6 9l6 6 6-6"/>
-                    </svg>
-                </a>
-            </div>
-        </header>
-
-        <div class="controls-row">
-            <div class="search-filter-wrapper">
-                <input type="text" placeholder="Filter node search parameters..." autocomplete="off">
-            </div>
-            <form method="get" action="{% url 'homepg' %}" class="date-picker-wrapper">
-                <input type="date" id="attendance-date-picker" name="date" value="{{ selected_date|date:'Y-m-d' }}" max="{{ today|date:'Y-m-d' }}" onchange="this.form.submit()">
+            <form method="get" action="{% url 'homepg' %}" style="display:flex;align-items:center;gap:6px;">
+              <input type="date" name="date" class="date-picker-input" value="{{ selected_date|date:'Y-m-d' }}" max="{{ today|date:'Y-m-d' }}" onchange="this.form.submit()">
             </form>
+
+            <a href="{% url 'report' %}?date={{ selected_date|date:'Y-m-d' }}" class="btn-export">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export Excel
+            </a>
+          </div>
         </div>
 
         {% if incomplete_profiles %}
-        <div class="incomplete-profiles" style="background: #111827; padding: 20px; border-radius: 12px; margin-bottom: 24px; border: 1px solid #1f2937;">
-            <h3 style="margin-bottom: 10px; font-weight: 600;">Action Required: New Cards Detected</h3>
-            {% for profile in incomplete_profiles %}
-                <div class="incomplete-item" style="display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 12px 16px; border-radius: 8px; margin-top: 10px;">
-                    <span>Unregistered UID: {{ profile.rfid_number }}</span>
-                    <a href="{% url 'set_password' pk=profile.author.pk %}" style="background: #2563eb; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: 600;">Complete Profile</a>
-                </div>
-            {% endfor %}
+        <!-- ACTION BANNER: NEW CARDS DETECTED -->
+        <div class="incomplete-banner">
+          <div class="incomplete-header">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <span>Action Required: {{ incomplete_profiles.count }} New Card(s) Scanned</span>
+          </div>
+          {% for profile in incomplete_profiles %}
+          <div class="incomplete-item">
+            <span><strong>Unregistered Card UID:</strong> {{ profile.rfid_number }}</span>
+            <a href="{% url 'set_password' pk=profile.author.pk %}" class="btn-complete-profile">Complete Registration</a>
+          </div>
+          {% endfor %}
         </div>
         {% endif %}
 
-        <section class="attendance-section">
-            <div class="attendance-header">
-                <h4>{% if selected_date == today %}Today's Attendance{% else %}Attendance for {{ selected_date|date:'F d, Y' }}{% endif %}</h4>
+        <!-- WELCOME BANNER -->
+        <div class="welcome-banner">
+          <div class="banner-heading">Welcome Back, {{ admin_name }}</div>
+          <div class="banner-sub">Real-Time RFID Attendance Gateway — Active & Listening</div>
+        </div>
+
+        <!-- READER STATUS BAR -->
+        <div class="reader-bar">
+          <div class="reader-status">
+            <div class="reader-icon-wrap">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#001F4D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
             </div>
+            <div>
+              <div class="reader-label">RFID Reader Gateway Active</div>
+              <div class="reader-hint">Attendance logs update in real-time as students scan their ID cards</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STAT CARDS -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#001F4D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+            <div class="stat-num">{{ total_students }}</div>
+            <div class="stat-label">Total Students</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="stat-num" style="color:#059669;">{{ present_count }}</div>
+            <div class="stat-label">Present Today</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+            <div class="stat-num" style="color:#DC2626;">{{ absent_count }}</div>
+            <div class="stat-label">Absent Today</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+            <div class="stat-num" style="color:#2563EB;">{{ attendance_pct }}</div>
+            <div class="stat-label">Attendance %</div>
+          </div>
+        </div>
+
+        <!-- ATTENDANCE TABLE CARD -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <span>Live Attendance Log</span>
+              <span class="tap-count-badge">{{ present_count }} present</span>
+            </div>
+            <div class="search-wrap">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input class="search-input" type="text" id="search" placeholder="Search by student name..." />
+            </div>
+          </div>
+          <div class="table-wrap">
             {% if attendance_logs %}
-            <div class="attendance-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
+            <table id="attendance-table">
+              <thead>
+                <tr>
+                  <th>Avatar</th>
+                  <th>Student Name</th>
+                  <th>Domain</th>
+                  <th>Branch / Division</th>
+                  <th>Check-In Time</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="attendance-body">
                 {% for log in attendance_logs %}
-                <article style="background:#081019; border:1px solid #111827; border-radius:16px; padding:18px; min-height:120px; display:flex; flex-direction:column; justify-content:space-between;">
-                    <div>
-                        <div style="font-size:0.95rem; color:#cbd5e1; text-transform: uppercase; letter-spacing:0.08em; margin-bottom: 6px;">{{ log.timestamp|date:"Y-m-d" }}</div>
-                        <div style="font-size:1.15rem; font-weight:700; color:#ffffff;">{% if log.teammate %}{{ log.teammate.name }}{% else %}Unknown{% endif %}</div>
-                        <div style="font-size:0.82rem; color:#94a3b8; margin-top:4px;">{{ log.timestamp|date:"H:i:s" }}</div>
+                <tr class="log-row" data-search="{{ log.teammate.name|default:'Unknown'|lower }} {{ log.teammate.domain|default:''|lower }} {{ log.teammate.branch|default:''|lower }}">
+                  <td>
+                    <div class="av">
+                      {{ log.teammate.name|slice:":2"|upper|default:"?" }}
                     </div>
-                    <div style="margin-top:14px; display:inline-flex; align-items:center; justify-content:space-between; gap:12px;">
-                        <span style="padding:6px 10px; border-radius:999px; background: #0f172a; color:#10b981; font-size:0.86rem; font-weight:700;">{{ log.status }}</span>
-                        {% if log.teammate %}
-                        <span style="font-size:0.78rem; color:#64748b;">{{ log.teammate.branch }}</span>
-                        {% endif %}
-                    </div>
-                </article>
+                  </td>
+                  <td><strong>{% if log.teammate %}{{ log.teammate.name }}{% else %}Unregistered Card{% endif %}</strong></td>
+                  <td>{{ log.teammate.domain|default:"N/A" }}</td>
+                  <td>{{ log.teammate.branch|default:"N/A" }}{% if log.teammate.division %} ({{ log.teammate.division }}){% endif %}</td>
+                  <td><span style="font-family:'JetBrains Mono',monospace;font-weight:700;">{{ log.timestamp|date:"H:i:s" }}</span></td>
+                  <td><span class="badge bg-green">● {{ log.status }}</span></td>
+                </tr>
                 {% endfor %}
-            </div>
+              </tbody>
+            </table>
             {% else %}
-            <div class="attendance-empty" style="background:#0f172a; border:1px solid #111827; border-radius:16px; padding:28px; text-align:center;">
-                <p style="color:#cbd5e1; font-size:1rem;">No attendance found for {% if selected_date == today %}today{% else %}{{ selected_date|date:'F d, Y' }}{% endif %}.</p>
+            <div class="empty-state" id="empty-state">
+              <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#001F4D" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+                <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/>
+              </svg>
+              <h3>No Attendance Recorded for this Date</h3>
+              <p>Scan an RFID card at the reader to view real-time entry logs.</p>
             </div>
             {% endif %}
-        </section>
+          </div>
+        </div>
 
-        <section class="status-container">
-            <div class="status-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M5 12a7 7 0 0 1 14 0M12 9v4M12 17h.01"/>
-                    <path d="M9 15a3 3 0 0 1 6 0"/>
-                </svg>
-            </div>
-            <div class="status-title">Awaiting Orbital Stream Transmissions</div>
-            <div class="status-subtitle">Waiting for data from local ESP32 ground station KJSIT/NLI</div>
-        </section>
+      </main>
     </div>
+  </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const starContainer = document.createElement('div');
-            starContainer.style.position = 'fixed';
-            starContainer.style.top = '0';
-            starContainer.style.left = '0';
-            starContainer.style.width = '100%';
-            starContainer.style.height = '100%';
-            starContainer.style.zIndex = '-1';
-            starContainer.style.overflow = 'hidden';
-            document.body.prepend(starContainer);
+  <script>
+    // Cursor Spotlight Light Follower
+    const spotlight = document.getElementById('cursor-spotlight');
+    const dot = document.getElementById('cursor-dot');
+    
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let currentX = mouseX;
+    let currentY = mouseY;
 
-            for (let i = 0; i < 50; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.width = Math.random() * 3 + 'px';
-                star.style.height = star.style.width;
-                star.style.top = Math.random() * 100 + '%';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.animationDelay = Math.random() * 3.5 + 's';
-                starContainer.appendChild(star);
-            }
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (dot) {
+        dot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+      }
+    });
 
-            const datePicker = document.getElementById("attendance-date-picker");
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0');
-            const day = String(today.getDate()).padStart(2, '0');
-            
-            datePicker.max = `${year}-${month}-${day}`;
+    function animateSpotlight() {
+      currentX += (mouseX - currentX) * 0.15;
+      currentY += (mouseY - currentY) * 0.15;
+      if (spotlight) {
+        spotlight.style.transform = `translate(${currentX - 300}px, ${currentY - 300}px)`;
+      }
+      requestAnimationFrame(animateSpotlight);
+    }
+    animateSpotlight();
+
+    // Search filter
+    const searchInput = document.getElementById('search');
+    if (searchInput) {
+      searchInput.addEventListener('input', function() {
+        const query = this.value.toLowerCase().trim();
+        const rows = document.querySelectorAll('.log-row');
+        rows.forEach(row => {
+          const text = row.getAttribute('data-search') || '';
+          row.style.display = text.includes(query) ? '' : 'none';
         });
-    </script>
+      });
+    }
+
+    // Mobile sidebar toggle
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const hamburger = document.getElementById('hamburger');
+    if (hamburger && sidebar && overlay) {
+      hamburger.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('open');
+      });
+      overlay.addEventListener('click', () => {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('open');
+      });
+    }
+  </script>
+
 </body>
 </html>

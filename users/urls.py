@@ -2,10 +2,10 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    # Main landing page dashboard tracking real-time logs
-    path('', views.home_dashboard, name='homepg'),
-    path('profile/',views.profile, name='profile'),
-    path('profile/<int:pk>/edit/', views.edit_profile, name='edit_profile'),
-    path('set_password/<int:pk>/', views.set_password, name='set_password'),
-    # Secure teammate data entry onboarding registration portal
+    path('', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
+    path('dashboard/', views.dashboard_view, name='dashboard'),
+    path('profile/', views.profile_view, name='profile'),
+    path('update-profile/', views.update_profile_view, name='update_profile'),
+    path('reset-password/', views.reset_password_view, name='reset_password'),
 ]

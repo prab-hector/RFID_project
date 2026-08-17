@@ -1,7 +1,21 @@
-.env
+# Python / Django temporary files
 __pycache__/
-db.sqlite3
-*.pyc
-media/
-google_creds.json
-.venv
+*.py[cod]
+*$py.class
+*.sqlite3
+
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# Environment variables & secrets
+.env
+
+# IDE / Editor folders
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+desktop.ini
